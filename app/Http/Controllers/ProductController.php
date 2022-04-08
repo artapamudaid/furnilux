@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Yajra\DataTables\Contracts\DataTable;
+use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
 
 class ProductController extends Controller
@@ -20,11 +21,26 @@ class ProductController extends Controller
             $product = Product::query();
 
             return DataTables::of($product)
+                ->addColumn('action', function ($item) {
+                    return '
+                    <a href="' . route('dashboard.product.edit', $item->id) . '" class="inline-flex items-center h-6 bg-indigo-500 hover:bg-indigo-700 text-sm text-white font-bold py-2 px-2 rounded shadow-lg">
+                    Edit
+                    </a>
+                    <form class="inline-block" action="' . route('dashboard.product.destroy', $item->id) . '" method="POST">
+                    <button class="inline-flex items-center h-6 bg-red-500 hover:bg-red-700 text-sm text-white font-bold py-2 px-2 rounded shadow-lg">
+                    ' . method_field('delete') . csrf_field() . '
+                    Delete
+                    </button>
+                    </form>
+                    ';
+                })
                 ->editColumn('price', function ($item) {
                     return number_format($item->price);
                 })
+                ->rawColumns(['action'])
                 ->make();
         }
+
         return view('pages.backend.products.index');
     }
 
@@ -35,7 +51,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        return view('pages.backend.products.create');
     }
 
     /**
@@ -44,9 +60,14 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-        //
+        $data = $request->all();
+        $data['slug'] = Str::slug($request->name);
+
+        Product::create($data);
+
+        return redirect()->route('dashboard.product.index');
     }
 
     /**
@@ -66,9 +87,9 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Product $product)
     {
-        //
+        return view('pages.backend.products.edit', compact('product'));
     }
 
     /**
@@ -78,9 +99,14 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProductRequest $request, Product $product)
     {
-        //
+        $data = $request->all();
+        $data['slug'] = Str::slug($request->name);
+
+        $product->update($data);
+
+        return redirect()->route('dashboard.product.index');
     }
 
     /**
@@ -89,8 +115,10 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Product $product)
     {
-        //
+        $product->delete();
+
+        return redirect()->route('dashboard.product.index');
     }
 }
