@@ -23,7 +23,10 @@ class ProductController extends Controller
             return DataTables::of($product)
                 ->addColumn('action', function ($item) {
                     return '
-                    <a href="' . route('dashboard.product.edit', $item->id) . '" class="inline-flex items-center h-6 bg-indigo-500 hover:bg-indigo-700 text-sm text-white font-bold py-2 px-2 rounded shadow-lg">
+                    <a href="' . route('dashboard.product.gallery.index', $item->id) . '" class="inline-flex items-center h-6 bg-indigo-500 hover:bg-indigo-700 text-sm text-white font-bold py-2 px-2 rounded shadow-lg">
+                    Photos
+                    </a>
+                    <a href="' . route('dashboard.product.edit', $item->id) . '" class="inline-flex items-center h-6 bg-gray-500 hover:bg-gray-700 text-sm text-white font-bold py-2 px-2 rounded shadow-lg">
                     Edit
                     </a>
                     <form class="inline-block" action="' . route('dashboard.product.destroy', $item->id) . '" method="POST">
