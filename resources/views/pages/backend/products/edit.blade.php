@@ -60,7 +60,7 @@
                         <div class="w-full px-3">
                             <button type="submit"
                                 class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow-lg">
-                                Save Product
+                                Update Product
                             </button>
                         </div>
                     </div>
