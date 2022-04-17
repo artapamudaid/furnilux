@@ -30,7 +30,7 @@ class ProductController extends Controller
                     Edit
                     </a>
                     <form class="inline-block" action="' . route('dashboard.product.destroy', $item->id) . '" method="POST">
-                    <button class="inline-flex items-center h-6 bg-red-500 hover:bg-red-700 text-sm text-white font-bold py-2 px-2 rounded shadow-lg">
+                    <button class="inline-flex items-center h-6 bg-red-500 hover:bg-red-700 text-sm text-white font-bold py-2 px-2 rounded shadow-lg" onclick="return confirm(`Are you sure to delete this product?`);">
                     ' . method_field('delete') . csrf_field() . '
                     Delete
                     </button>
